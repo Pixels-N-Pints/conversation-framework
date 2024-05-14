@@ -14,7 +14,7 @@ class PAP_DialogueLoader
 	}
 
 	
-	PAP_DialogueOptionJson GetCurrentOption()
+	ref PAP_DialogueOptionJson GetCurrentOption()
 	{
 		if (!m_mDialogueById || m_mDialogueById.IsEmpty())
 		{

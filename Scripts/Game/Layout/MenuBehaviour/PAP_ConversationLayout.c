@@ -146,9 +146,10 @@ class PAP_ConversationLayoutUI : MenuBase
 	
 	protected void HandleEntryOption(PAP_DialogueOptionJson entryOption)
 	{
-		m_bItallic = true;
-		HandleOption(entryOption);
-		m_bItallic = false;
+		// m_bItallic = true;
+		m_cDialogueLoader.SetCheckpoint(entryOption.next);
+		HandleOption(m_cDialogueLoader.GetCurrentOption());
+		// m_bItallic = false;
 	}
 	
 	// Overrides for behaviour 
