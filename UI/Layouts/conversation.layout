@@ -1,0 +1,142 @@
+FrameWidgetClass {
+ Name "rootFrame"
+ Color 0.034 0.061 0 1
+ {
+  ImageWidgetClass "{6158939DCC215493}" {
+   Name "Frame0"
+   Slot FrameWidgetSlot "{6158939DCC21548C}" {
+    Anchor 0.5 1 0.5 1
+    OffsetLeft 0
+    OffsetTop 0
+    SizeX 950
+    OffsetRight -950
+    SizeY 350
+    OffsetBottom -350
+    Alignment 0.5 1.05
+   }
+   Opacity 0.95
+   Color 0.251 0.502 0 1
+   Texture "{3D21C412A11AFAFA}Common/Textures/Camouflage/T_CamoSolid_01_BC.edds"
+   Size 512 512
+   Tiling Wrap
+   "Shadow Offset" 0 0
+  }
+  TextWidgetClass "{6158939E2EB34340}" {
+   Name "Message"
+   Slot FrameWidgetSlot "{6158939E2EB35F77}" {
+    Anchor 0.5 1 0.5 1
+    OffsetLeft 0
+    OffsetTop 0
+    SizeX 900
+    OffsetRight -900
+    SizeY 90
+    OffsetBottom -90
+    Alignment 0.5 3.85
+   }
+   Text "This is"\
+   "a"\
+   "multiline text"
+   "Font Size" 28
+   "Min Font Size" 20
+   "Vertical Alignment" Center
+   Wrap 1
+   FontProperties FontProperties "{61589394C54B77DA}" {
+    Bold 1
+   }
+   Offset 20 0
+  }
+  ButtonWidgetClass "{61589395471ABC6E}" {
+   Name "Button0"
+   Slot FrameWidgetSlot "{61589395471ABC35}" {
+    Anchor 0.5 1 0.5 1
+    OffsetLeft 0
+    OffsetTop 0
+    SizeX 900
+    OffsetRight -900
+    SizeY 60
+    OffsetBottom -60
+    Alignment 0.5 4
+   }
+   Color 0.019 0.098 0.067 0.444
+   components {
+    SCR_ButtonBaseComponent "{615893AF340D352A}" {
+    }
+   }
+   {
+    TextWidgetClass "{61589395720D931E}" {
+     Name "Text"
+     Slot ButtonWidgetSlot "{61589395720D9432}" {
+      HorizontalAlign 0
+      Padding 20 0 0 0
+     }
+     "Min Font Size" 18
+     "Vertical Alignment" Center
+     Wrap 1
+     Offset 1 0
+    }
+   }
+  }
+  ButtonWidgetClass "{615893AF71683069}" {
+   Name "Button1"
+   Slot FrameWidgetSlot "{61589395471ABC35}" {
+    Anchor 0.5 1 0.5 1
+    OffsetLeft 0
+    OffsetTop 0
+    SizeX 900
+    OffsetRight -900
+    SizeY 60
+    OffsetBottom -60
+    Alignment 0.5 2.75
+   }
+   Color 0.019 0.098 0.067 0.444
+   components {
+    SCR_ButtonBaseComponent "{615893AF340D352A}" {
+    }
+   }
+   {
+    TextWidgetClass "{615893AF7168306B}" {
+     Name "Text"
+     Slot ButtonWidgetSlot "{61589395720D9432}" {
+      HorizontalAlign 0
+      Padding 20 0 0 0
+     }
+     "Min Font Size" 18
+     "Vertical Alignment" Center
+     Wrap 1
+     Offset 1 0
+    }
+   }
+  }
+  ButtonWidgetClass "{615893AF73B4CE56}" {
+   Name "Button2"
+   Slot FrameWidgetSlot "{61589395471ABC35}" {
+    Anchor 0.5 1 0.5 1
+    OffsetLeft 0
+    OffsetTop 0
+    SizeX 900
+    OffsetRight -900
+    SizeY 60
+    OffsetBottom -60
+    Alignment 0.5 1.5
+   }
+   Color 0.019 0.098 0.067 0.444
+   components {
+    SCR_ButtonBaseComponent "{615893AF340D352A}" {
+    }
+   }
+   {
+    TextWidgetClass "{615893AF73B4CE51}" {
+     Name "Text"
+     Slot ButtonWidgetSlot "{61589395720D9432}" {
+      HorizontalAlign 0
+      Padding 20 0 0 0
+     }
+     "Min Font Size" 18
+     "Vertical Alignment" Center
+     Wrap 1
+     Offset 1 0
+    }
+   }
+  }
+ }
+}
