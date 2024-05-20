@@ -1,3 +1,4 @@
+//! Container for the open conversation dialogue user action
 class PAP_ConversationLayoutAttributes : ScriptedUserAction
 {
 	[Attribute(defvalue: "{A27941092D1EA761}UI/Layouts/conversation.layout")] // setup the created layout here
@@ -10,7 +11,7 @@ class PAP_ConversationLayoutAttributes : ScriptedUserAction
 	
 	protected ref PAP_DialogueLoader m_dialogueLoader;
 }
-
+//! Handles the user action's behaviour
 class PAP_ConversationLayoutUserAction : PAP_ConversationLayoutAttributes
 {
 	//------------------------------------------------------------------------------------------------
@@ -25,10 +26,30 @@ class PAP_ConversationLayoutUserAction : PAP_ConversationLayoutAttributes
 	//------------------------------------------------------------------------------------------------
 	override void PerformAction(IEntity pOwnerEntity, IEntity pUserEntity)
 	{
-		if (m_wDisplay) return;
+		// Cancel if dialogue already exists
+		if (m_wDisplay)
+		{
+			Print("Dialogue with " + pOwnerEntity.GetName() + " is already in use", LogLevel.WARNING);
+			return;
+		}
 
+		// Get the npc to look at you
+		PAP_NPCComponent npcComponent = PAP_NPCComponent.Cast(pOwnerEntity.FindComponent(PAP_NPCComponent));
+		if (npcComponent)
+		{
+			// Doesn't work :(
+			// npcComponent.StartRotation(pUserEntity.GetAngles());
+		}
+		else
+		{
+			Print("NPC " + pOwnerEntity.GetName() + " doesn't have a PAP_NPCComponent", LogLevel.ERROR);
+			return;
+		}
+		
+		// Create the display and hydrate the widgets
 		m_wDisplay = PAP_ConversationLayoutUI.Cast(GetGame().GetMenuManager().OpenDialog(ChimeraMenuPreset.PAP_ConversationLayout, DialogPriority.INFORMATIVE, 0, true));
-		m_wDisplay.ResumeDialogue(m_dialogueLoader);
+		CharacterIdentityComponent playerCharacterIdentity = CharacterIdentityComponent.Cast(pUserEntity.FindComponent(CharacterIdentityComponent));
+		m_wDisplay.ResumeDialogue(m_dialogueLoader, playerCharacterIdentity.GetIdentity(), pOwnerEntity);
 	}
 
 	//------------------------------------------------------------------------------------------------
@@ -58,6 +79,9 @@ class PAP_ConversationLayoutUserAction : PAP_ConversationLayoutAttributes
 		return true;
 	}
 	
+	//------------------------------------------------------------------------------------------------
+	//! Loads conversation from conf file
+	//! \return a container of the conversation
 	protected PAP_ConversationConf LoadConfig()
 	{
 		if (m_sConversation.IsEmpty())

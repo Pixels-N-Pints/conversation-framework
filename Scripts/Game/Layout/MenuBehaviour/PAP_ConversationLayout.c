@@ -1,10 +1,13 @@
+//! Dialogue behaviour for the conversation layout
 class PAP_ConversationLayoutUI : MenuBase
 {
-	
 	// Member vars
 	protected ref PAP_DialogueLoader m_cDialogueLoader;
 	protected ref array<ref PAP_DialogueOptionJson> m_mOptions;
 	protected bool m_bItallic = false;
+	protected Identity m_PlayerIdentity;
+	protected IEntity m_Npc;
+	protected Identity m_NpcIdentity;
 	
 	// Constants
 	protected const string MESSAGE = "Message";
@@ -12,45 +15,76 @@ class PAP_ConversationLayoutUI : MenuBase
 	protected const string TEXT = "Text";
 	protected const int MAX_OPTIONS = 3;
 	
-	void ResumeDialogue(inout PAP_DialogueLoader dialogueLoader)
+	//------------------------------------------------------------------------------------------------
+	//! Loads the conversation from the checkpoint
+	//! \param dialogueLoader Container for conversation
+	//! \param playerIdentity Identity of the player
+	//! \param npc The npc
+	void ResumeDialogue(inout PAP_DialogueLoader dialogueLoader, Identity playerIdentity, IEntity npc)
 	{
 		if (!dialogueLoader)
 		{	
 			Print("Dialogue loader not supplied!", LogLevel.ERROR);
 			return;
 		}
+		if (!playerIdentity)
+		{
+			Print("No player identity supplied!", LogLevel.ERROR);
+			return;
+		}
+		if (!npc)
+		{
+			Print("No npc supplied!", LogLevel.ERROR);
+			return;
+		}
+		
 		m_cDialogueLoader = dialogueLoader;
+		m_PlayerIdentity = playerIdentity;
+		m_Npc = npc;
+		CharacterIdentityComponent npcIdentityComponent = CharacterIdentityComponent.Cast(m_Npc.FindComponent(CharacterIdentityComponent));
+		m_NpcIdentity = npcIdentityComponent.GetIdentity();
+		
 		ref PAP_DialogueOptionJson option = m_cDialogueLoader.GetCurrentOption();
 		HandleOption(option);
 	}
 	
-	protected void HandleOption(PAP_DialogueOptionJson option)
+	//------------------------------------------------------------------------------------------------
+	//! Updates the message and handles options based on the supplied dialogue entry
+	//! If the player is not required to answer the next entry will be displayed after the current entry's delay has expired
+	//! \param entry The current entry to be displayed
+	protected void HandleOption(PAP_DialogueOptionJson entry)
 	{
-		if (!option)
+		if (!entry)
 		{
 			Print("Dialogue entry not supplied!", LogLevel.WARNING);
 			return;
 		}
 		// Display message
-		UpdateMessage(option.message);	
+		UpdateMessage(entry.message);	
 		// Display options
-		UpdateOptions(option.options);
-		if (option.next != -1)
+		UpdateOptions(entry.options);
+		if (entry.next != -1)
 		{
-			m_cDialogueLoader.SetCheckpoint(option.next);
-			GetGame().GetCallqueue().CallLater(HandleOption, option.delay * 1000, false, m_cDialogueLoader.GetCurrentOption());
+			m_cDialogueLoader.SetCheckpoint(entry.next);
+			GetGame().GetCallqueue().CallLater(HandleOption, entry.delay * 1000, false, m_cDialogueLoader.GetCurrentOption());
 		}
 	}
 	
+	//------------------------------------------------------------------------------------------------
+	//! Displays the main message
+	//! \param message The message to be displayed as a string
 	protected void UpdateMessage(string message)
 	{
 		TextWidget messageWidget = TextWidget.Cast(GetWidgetByName(MESSAGE));
 		if (!messageWidget) return;
 		
 		messageWidget.SetItalic(m_bItallic);
-		messageWidget.SetText(message);
+		messageWidget.SetText(PAP_StringInterpolation.InterpolateString(message, m_PlayerIdentity, m_NpcIdentity));
 	}
 	
+	//------------------------------------------------------------------------------------------------
+	//! Updates the option buttons. Disables and hides buttons not required.
+	//! \param options The options the player can pick from
 	protected void UpdateOptions(array<ref PAP_DialogueOptionJson> options)
 	{
 		m_mOptions = options;
@@ -74,7 +108,7 @@ class PAP_ConversationLayoutUI : MenuBase
 					continue;
 				}
 				// Update option text
-				option.SetText(m_mOptions[i].message);
+				option.SetText(PAP_StringInterpolation.InterpolateString(m_mOptions[i].message, m_PlayerIdentity, m_NpcIdentity));
 				// Reenable button
 				button.SetVisible(true);
 				button.SetEnabled(true);
@@ -106,6 +140,10 @@ class PAP_ConversationLayoutUI : MenuBase
 		}
 	}
 	
+	//------------------------------------------------------------------------------------------------
+	//! Finds the widget in the dialogue by it's ID
+	//! \param widgetName The ID of the widget
+	//! \return the widget if found
 	protected Widget GetWidgetByName(string widgetName)
 	{
 		if (!widgetName || widgetName == string.Empty) return null;
@@ -128,22 +166,29 @@ class PAP_ConversationLayoutUI : MenuBase
 		return widget;
 	}
 	
+	//------------------------------------------------------------------------------------------------
+	//! Callback for click event of first option
 	protected void HandleFirstOption()
 	{
 		HandleEntryOption(m_mOptions.Get(0));
 	}
 	
+	//------------------------------------------------------------------------------------------------
+	//! Callback for click event of second option
 	protected void HandleSecondOption()
 	{
 		HandleEntryOption(m_mOptions.Get(1));
 	}
 	
+	//------------------------------------------------------------------------------------------------
+	//! Callback for click event of third option
 	protected void HandleThirdOption()
 	{
 		HandleEntryOption(m_mOptions.Get(2));
 	}
 	
-	
+	//------------------------------------------------------------------------------------------------
+	//! Updates the checkpoint and displays the next entry
 	protected void HandleEntryOption(PAP_DialogueOptionJson entryOption)
 	{
 		// m_bItallic = true;
@@ -195,9 +240,14 @@ class PAP_ConversationLayoutUI : MenuBase
 			inputManager.RemoveActionListener("MenuBackWB", EActionTrigger.DOWN, Close);
 #endif
 		}
+		
+		// End npc rotation
+		PAP_NPCComponent npcComponent = PAP_NPCComponent.Cast(m_Npc.FindComponent(PAP_NPCComponent));
+		npcComponent.StopRotation();
 	}
 
-	// Destructor
+	//------------------------------------------------------------------------------------------------
+	//! Destructor
 	void ~PAP_ConversationLayoutUI()
 	{
 		delete m_mOptions;

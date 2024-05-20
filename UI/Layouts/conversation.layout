@@ -10,8 +10,8 @@ FrameWidgetClass {
     OffsetTop 0
     SizeX 950
     OffsetRight -950
-    SizeY 350
-    OffsetBottom -350
+    SizeY 310
+    OffsetBottom -310
     Alignment 0.5 1.05
    }
    Opacity 0.95
@@ -27,11 +27,11 @@ FrameWidgetClass {
     Anchor 0.5 1 0.5 1
     OffsetLeft 0
     OffsetTop 0
-    SizeX 900
-    OffsetRight -900
+    SizeX 930
+    OffsetRight -930
     SizeY 90
     OffsetBottom -90
-    Alignment 0.5 3.85
+    Alignment 0.5 3.5
    }
    Text "This is"\
    "a"\
@@ -51,11 +51,11 @@ FrameWidgetClass {
     Anchor 0.5 1 0.5 1
     OffsetLeft 0
     OffsetTop 0
-    SizeX 900
-    OffsetRight -900
+    SizeX 930
+    OffsetRight -930
     SizeY 60
     OffsetBottom -60
-    Alignment 0.5 4
+    Alignment 0.5 3.6
    }
    Color 0.019 0.098 0.067 0.444
    components {
@@ -82,11 +82,11 @@ FrameWidgetClass {
     Anchor 0.5 1 0.5 1
     OffsetLeft 0
     OffsetTop 0
-    SizeX 900
-    OffsetRight -900
+    SizeX 930
+    OffsetRight -930
     SizeY 60
     OffsetBottom -60
-    Alignment 0.5 2.75
+    Alignment 0.5 2.5
    }
    Color 0.019 0.098 0.067 0.444
    components {
@@ -113,11 +113,11 @@ FrameWidgetClass {
     Anchor 0.5 1 0.5 1
     OffsetLeft 0
     OffsetTop 0
-    SizeX 900
-    OffsetRight -900
+    SizeX 930
+    OffsetRight -930
     SizeY 60
     OffsetBottom -60
-    Alignment 0.5 1.5
+    Alignment 0.5 1.4
    }
    Color 0.019 0.098 0.067 0.444
    components {

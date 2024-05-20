@@ -1,10 +1,10 @@
-GenericEntity Area1 : "{C72F956E4AC6A6E7}Prefabs/ScenarioFramework/Components/Area.et" {
+GenericEntity AreaSpawn : "{C72F956E4AC6A6E7}Prefabs/ScenarioFramework/Components/Area.et" {
  coords 8403.95 12.954 796.996
  angleX -0.895
  angleY -0.014
  angleZ 0.895
  {
-  GenericEntity Layer1 : "{5F9FFF4BF027B3A3}Prefabs/ScenarioFramework/Components/Layer.et" {
+  GenericEntity LayerSpawn : "{5F9FFF4BF027B3A3}Prefabs/ScenarioFramework/Components/Layer.et" {
    coords 0 0 0
    {
     GenericEntity PlayerSpawn : "{AA01691FDC4E9167}Prefabs/ScenarioFramework/Components/Slot.et" {

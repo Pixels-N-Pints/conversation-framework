@@ -1,19 +1,29 @@
+//! Container for a conversation
 class PAP_DialogueLoader
 {
+	// Member vars
+	//! Checkpoint of the conversation
 	protected int m_iCheckpoint;
+	//! Dialogue entries defined in a configuration file and rebuilt as a map object for ease of scripting
 	protected ref map<int, ref PAP_DialogueOptionJson> m_mDialogueById;
-
+	
+	//------------------------------------------------------------------------------------------------
+	//! Checkpoint setter
 	void SetCheckpoint(int checkpoint)
 	{
 		m_iCheckpoint = checkpoint;	
 	}
 	
+	//------------------------------------------------------------------------------------------------
+	//! Checkpoint getter
 	int GetCheckpoint()
 	{
 		return m_iCheckpoint;
 	}
 
-	
+	//------------------------------------------------------------------------------------------------
+	//! Gets the current option based on the value of the checkpoint
+	//! \return a dialogue entry
 	ref PAP_DialogueOptionJson GetCurrentOption()
 	{
 		if (!m_mDialogueById || m_mDialogueById.IsEmpty())
@@ -26,6 +36,9 @@ class PAP_DialogueLoader
 		return option;
 	}
 	
+	//------------------------------------------------------------------------------------------------
+	//! Checks the configuration object is valid then calls to build the conversation map
+	//! \param conversationConf Configuration object containing the conversation
 	void LoadConversation(PAP_ConversationConf conversationConf)
 	{
 		if (!conversationConf)
@@ -36,6 +49,9 @@ class PAP_DialogueLoader
 		BuildConversationFromConf(conversationConf);
 	}
 	
+	//------------------------------------------------------------------------------------------------
+	//! Builds the conversation map
+	//! \param conversationConf Configuration object containing the conversation
 	protected void BuildConversationFromConf(notnull PAP_ConversationConf conversationConf)
 	{
 		m_mDialogueById = new map<int, ref PAP_DialogueOptionJson>();
@@ -70,7 +86,8 @@ class PAP_DialogueLoader
 		m_iCheckpoint = m_mDialogueById.GetKey(0);
 	}
 
-	
+	//------------------------------------------------------------------------------------------------
+	//! Destructor
 	void ~PAP_DialogueLoader()
 	{
 		delete m_mDialogueById;

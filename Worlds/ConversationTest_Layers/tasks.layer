@@ -1,3 +1,56 @@
-SCR_BaseTaskManager TaskManager : "{1AC69CD7907FB4F8}Prefabs/ScenarioFramework/Tasks/TaskManager.et" {
- coords 7114.537 74.797 6402.884
+GenericEntity AreaKill : "{C72F956E4AC6A6E7}Prefabs/ScenarioFramework/Components/Area.et" {
+ components {
+  SCR_ScenarioFrameworkArea "{59E8CDC50969206E}" {
+   m_iRandomPercent 100
+   m_bShowDebugShapesDuringRuntime 1
+   m_fAreaRadius 50
+   m_bDynamicDespawn 1
+   m_iDynamicDespawnRange 50
+  }
+ }
+ coords 8491.263 1.017 790.705
+ {
+  GenericEntity LayerKill : "{2008B4EE6C4D528E}Prefabs/ScenarioFramework/Components/LayerTaskKill.et" {
+   components {
+    SCR_ScenarioFrameworkLayerTaskKill "{5B02763B6A6D6C4B}" {
+     m_iRandomPercent 100
+     m_eActivationType ON_TRIGGER_ACTIVATION
+    }
+   }
+   coords 0 0 0
+   {
+    GenericEntity SlotKill1 : "{C70DC6CBD1AAEC9A}Prefabs/ScenarioFramework/Components/SlotKill.et" {
+     components {
+      SCR_ScenarioFrameworkSlotKill "{5B02763C1EAA0BF1}" {
+       m_sObjectToSpawn "{98EB9CDD85B8C92C}Prefabs/Characters/Factions/OPFOR/USSR_Army/Character_USSR_Unarmed.et"
+       m_sWPToSpawn "{531EC45063C1F57B}Prefabs/AI/Waypoints/AIWaypoint_Wait.et"
+      }
+     }
+     coords 0 0 0
+    }
+    GenericEntity SlotTrigger1 : "{D183AFE8DAF9793D}Prefabs/ScenarioFramework/Components/SlotTrigger.et" {
+     components {
+      SCR_ScenarioFrameworkSlotTrigger "{5A4B5098DE424991}" {
+       m_aPlugins {
+        SCR_ScenarioFrameworkPluginTrigger "{5AC53D73FCB1F805}" {
+         m_aSpecificClassNames {
+          ""
+         }
+         m_bOnce 1
+        }
+       }
+       m_aTriggerActions {
+        SCR_ScenarioFrameworkActionSpawnObjects "{6166B42498B0EBFB}" {
+         m_aNameOfObjectsToSpawnOnActivation {
+          "LayerTaskKill2"
+         }
+        }
+       }
+      }
+     }
+     coords 0 0 0
+    }
+   }
+  }
+ }
 }

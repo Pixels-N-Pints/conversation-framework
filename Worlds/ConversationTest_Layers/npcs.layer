@@ -6,7 +6,7 @@ SCR_FactionManager FactionManager_USxUSSR : "{589540B35EBA8CDC}Prefabs/MP/Manage
   }
  }
 }
-SCR_ChimeraCharacter : "{3726077BE60962FF}Prefabs/Characters/Factions/BLUFOR/US_Army/Character_US_RTO.et" {
+SCR_ChimeraCharacter MikkelThePikkel : "{3726077BE60962FF}Prefabs/Characters/Factions/BLUFOR/US_Army/Character_US_RTO.et" {
  components {
   EventHandlerManagerComponent "{530284308E2527DD}" {
    EventHandlers {
@@ -162,6 +162,9 @@ SCR_ChimeraCharacter : "{3726077BE60962FF}Prefabs/Characters/Factions/BLUFOR/US_
   CharacterWeaponManagerComponent "{5C9CA676383262FD}" {
    DefaultWeaponIndex 0
   }
+  ChimeraAIControlComponent "{520EA1D2DB109F34}" {
+   EnableAI 1
+  }
   ClimbingDataComponent "{5304A49E934A0758}" {
    CanClimbOver 0
   }
@@ -173,6 +176,8 @@ SCR_ChimeraCharacter : "{3726077BE60962FF}Prefabs/Characters/Factions/BLUFOR/US_
   }
   MeshObject "{520EA1D2F659C81F}" {
    Object "{9F3AF591CD6DFE1A}Assets/Characters/Basebody/Basebody_Male_01.xob"
+  }
+  PAP_NPCComponent "{6168A1E80E34A806}" {
   }
   SCR_BaseHUDComponent "{520EA1D2DB118134}" {
    InfoDisplays {
@@ -192,6 +197,8 @@ SCR_ChimeraCharacter : "{3726077BE60962FF}Prefabs/Characters/Factions/BLUFOR/US_
   SCR_CharacterDamageManagerComponent "{55872AD7B4E959F2}" : "{73C708A20F8B22E6}Prefabs/Characters/Core/DamageManager_Character_Base.ct" {
    "Fall damage min speed" 8.85
    "Fall damage max speed" 11.2
+   EnableDamage 0
+   m_bPermitUnconsciousness 0
   }
   SCR_CharacterPerceivableComponent "{566CCE2397E28600}" {
    "Additional aim points" {
@@ -731,6 +738,8 @@ SCR_ChimeraCharacter : "{3726077BE60962FF}Prefabs/Characters/Factions/BLUFOR/US_
      m_bDoesGadgetAnimationLoop 0
     }
     PAP_ConversationLayoutUserAction "{61507E8B0143040F}" {
+     VisibilityRange 2
+     m_sConversation "{0858865E306C23D1}Configs/Dialogue/basic_kill_request.conf"
     }
    }
   }
@@ -871,5 +880,4 @@ SCR_ChimeraCharacter : "{3726077BE60962FF}Prefabs/Characters/Factions/BLUFOR/US_
   }
  }
  coords 8406.244 12.91 797.625
- angleY -78.982
 }
