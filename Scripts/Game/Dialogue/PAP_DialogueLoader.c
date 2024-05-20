@@ -69,6 +69,7 @@ class PAP_DialogueLoader
 			jEntry.message = entry.GetMessage();
 			jEntry.next = entry.GetNextId();
 			jEntry.delay = entry.GetDelay();
+			jEntry.entityName = entry.GetEntityName();
 			if (entry.GetOptions() && !entry.GetOptions().IsEmpty())
 			{
 				jEntry.options = {};
@@ -77,6 +78,7 @@ class PAP_DialogueLoader
 					PAP_DialogueOptionJson jEntryOption = new PAP_DialogueOptionJson();
 					jEntryOption.message = entryOption.GetMessage();
 					jEntryOption.next = entryOption.GetNextId();
+					jEntryOption.entityName = entryOption.GetEntityName();
 					jEntry.options.Insert(jEntryOption);
 				}
 			}

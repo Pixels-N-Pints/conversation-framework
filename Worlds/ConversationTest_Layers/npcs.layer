@@ -163,6 +163,7 @@ SCR_ChimeraCharacter MikkelThePikkel : "{3726077BE60962FF}Prefabs/Characters/Fac
    DefaultWeaponIndex 0
   }
   ChimeraAIControlComponent "{520EA1D2DB109F34}" {
+   OverrideAIBehaviorData "{B62F3C5AA48FFEEF}AI/BehaviorTrees/Chimera/Soldier/Wait.bt"
    EnableAI 1
   }
   ClimbingDataComponent "{5304A49E934A0758}" {
@@ -880,4 +881,5 @@ SCR_ChimeraCharacter MikkelThePikkel : "{3726077BE60962FF}Prefabs/Characters/Fac
   }
  }
  coords 8406.244 12.91 797.625
+ angleY -124.4
 }

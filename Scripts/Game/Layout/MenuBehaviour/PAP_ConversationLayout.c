@@ -8,12 +8,20 @@ class PAP_ConversationLayoutUI : MenuBase
 	protected Identity m_PlayerIdentity;
 	protected IEntity m_Npc;
 	protected Identity m_NpcIdentity;
+	protected ref SCR_ScenarioFrameworkActionBase m_EntityFactory;
 	
 	// Constants
 	protected const string MESSAGE = "Message";
 	protected const string BUTTON = "Button";
 	protected const string TEXT = "Text";
 	protected const int MAX_OPTIONS = 3;
+	
+	//------------------------------------------------------------------------------------------------
+	override void OnMenuInit()
+	{
+		super.OnMenuInit();
+		m_EntityFactory = new SCR_ScenarioFrameworkActionBase();
+	}
 	
 	//------------------------------------------------------------------------------------------------
 	//! Loads the conversation from the checkpoint
@@ -63,11 +71,11 @@ class PAP_ConversationLayoutUI : MenuBase
 		UpdateMessage(entry.message);	
 		// Display options
 		UpdateOptions(entry.options);
-		if (entry.next != -1)
-		{
-			m_cDialogueLoader.SetCheckpoint(entry.next);
-			GetGame().GetCallqueue().CallLater(HandleOption, entry.delay * 1000, false, m_cDialogueLoader.GetCurrentOption());
-		}
+		// Spawn any entity
+		SpawnEntity(entry.entityName);
+		// Handle next entry
+		HandleNext(entry.next, entry.delay);
+		
 	}
 	
 	//------------------------------------------------------------------------------------------------
@@ -141,6 +149,33 @@ class PAP_ConversationLayoutUI : MenuBase
 	}
 	
 	//------------------------------------------------------------------------------------------------
+	//! Spawns the entity associated with the dialogue
+	//! \param entityName Name of an entity in the world
+	void SpawnEntity(string entityName)
+	{
+		if (SCR_StringHelper.IsEmptyOrWhiteSpace(entityName)) return;
+		m_EntityFactory.SpawnObjects({entityName}, SCR_ScenarioFrameworkEActivationType.ON_TRIGGER_ACTIVATION);
+	}
+	
+	//------------------------------------------------------------------------------------------------
+	//! Handles the next entry if there are no options
+	//! \param next Id of the next dialogue entry
+	//! \param delay Delay in seconds the current message should persist
+	void HandleNext(int next, int delay)
+	{
+		if (next != -1 && next != 0)
+		{
+			m_cDialogueLoader.SetCheckpoint(next);
+			GetGame().GetCallqueue().CallLater(HandleOption, delay * 1000, false, m_cDialogueLoader.GetCurrentOption());
+		}
+		else if (next == 0)
+		{	
+			GetGame().GetCallqueue().CallLater(Close, delay * 1000, false);
+		}
+	}
+	
+	
+	//------------------------------------------------------------------------------------------------
 	//! Finds the widget in the dialogue by it's ID
 	//! \param widgetName The ID of the widget
 	//! \return the widget if found
@@ -193,7 +228,7 @@ class PAP_ConversationLayoutUI : MenuBase
 	{
 		// m_bItallic = true;
 		m_cDialogueLoader.SetCheckpoint(entryOption.next);
-		HandleOption(m_cDialogueLoader.GetCurrentOption());
+		GetGame().GetCallqueue().CallLater(HandleOption, 500, false, m_cDialogueLoader.GetCurrentOption());
 		// m_bItallic = false;
 	}
 	
@@ -250,7 +285,7 @@ class PAP_ConversationLayoutUI : MenuBase
 	//! Destructor
 	void ~PAP_ConversationLayoutUI()
 	{
-		delete m_mOptions;
+		delete m_EntityFactory;
 	}
 	
 }

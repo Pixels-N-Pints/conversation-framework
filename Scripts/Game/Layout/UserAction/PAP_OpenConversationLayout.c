@@ -10,6 +10,15 @@ class PAP_ConversationLayoutAttributes : ScriptedUserAction
 	protected PAP_ConversationLayoutUI m_wDisplay;
 	
 	protected ref PAP_DialogueLoader m_dialogueLoader;
+	
+	//------------------------------------------------------------------------------------------------
+	//! Set the conversation. 
+	//! Useful if the npc needs to be able to have distinct conversations with the player. 
+	//! E.g. the player fulfills a certain condition and the npc is ready to have a different conversation.
+	void SetConversation(ResourceName conversation)
+	{
+		m_sConversation = conversation;
+	}
 }
 //! Handles the user action's behaviour
 class PAP_ConversationLayoutUserAction : PAP_ConversationLayoutAttributes
@@ -37,8 +46,7 @@ class PAP_ConversationLayoutUserAction : PAP_ConversationLayoutAttributes
 		PAP_NPCComponent npcComponent = PAP_NPCComponent.Cast(pOwnerEntity.FindComponent(PAP_NPCComponent));
 		if (npcComponent)
 		{
-			// Doesn't work :(
-			// npcComponent.StartRotation(pUserEntity.GetAngles());
+			npcComponent.StartRotation(pUserEntity.GetOrigin());
 		}
 		else
 		{

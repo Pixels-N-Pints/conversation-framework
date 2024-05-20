@@ -10,11 +10,21 @@ GenericEntity AreaKill : "{C72F956E4AC6A6E7}Prefabs/ScenarioFramework/Components
  }
  coords 8491.263 1.017 790.705
  {
-  GenericEntity LayerKill : "{2008B4EE6C4D528E}Prefabs/ScenarioFramework/Components/LayerTaskKill.et" {
+  GenericEntity KillSeashellMan : "{2008B4EE6C4D528E}Prefabs/ScenarioFramework/Components/LayerTaskKill.et" {
    components {
     SCR_ScenarioFrameworkLayerTaskKill "{5B02763B6A6D6C4B}" {
      m_iRandomPercent 100
      m_eActivationType ON_TRIGGER_ACTIVATION
+     m_aActivationActions {
+      SCR_ScenarioFrameworkActionShowHint "{61694E989537C1E2}" {
+       m_sText "You've accepted a new task"
+      }
+     }
+     m_aTriggerActionsOnFinish {
+      SCR_ScenarioFrameworkActionShowHint "{61694E9ECB77A24F}" {
+       m_sText "Inform Mikkel the problem has been dealt with"
+      }
+     }
     }
    }
    coords 0 0 0
@@ -22,30 +32,15 @@ GenericEntity AreaKill : "{C72F956E4AC6A6E7}Prefabs/ScenarioFramework/Components
     GenericEntity SlotKill1 : "{C70DC6CBD1AAEC9A}Prefabs/ScenarioFramework/Components/SlotKill.et" {
      components {
       SCR_ScenarioFrameworkSlotKill "{5B02763C1EAA0BF1}" {
-       m_sObjectToSpawn "{98EB9CDD85B8C92C}Prefabs/Characters/Factions/OPFOR/USSR_Army/Character_USSR_Unarmed.et"
+       m_sFactionKey "USSR"
+       m_sObjectToSpawn "{5436629450D8387A}Prefabs/Characters/Factions/OPFOR/USSR_Army/Character_USSR_SL.et"
+       m_bRandomizePerFaction 1
+       m_eEntityCatalogType CHARACTER
+       m_sTaskTitle "Eliminate \"Seashell\""
+       m_sTaskDescription "He should be on the beach somewhere nearby."
+       m_bSpawnAIOnWPPos 0
        m_sWPToSpawn "{531EC45063C1F57B}Prefabs/AI/Waypoints/AIWaypoint_Wait.et"
-      }
-     }
-     coords 0 0 0
-    }
-    GenericEntity SlotTrigger1 : "{D183AFE8DAF9793D}Prefabs/ScenarioFramework/Components/SlotTrigger.et" {
-     components {
-      SCR_ScenarioFrameworkSlotTrigger "{5A4B5098DE424991}" {
-       m_aPlugins {
-        SCR_ScenarioFrameworkPluginTrigger "{5AC53D73FCB1F805}" {
-         m_aSpecificClassNames {
-          ""
-         }
-         m_bOnce 1
-        }
-       }
-       m_aTriggerActions {
-        SCR_ScenarioFrameworkActionSpawnObjects "{6166B42498B0EBFB}" {
-         m_aNameOfObjectsToSpawnOnActivation {
-          "LayerTaskKill2"
-         }
-        }
-       }
+       m_eAISkill EXPERT
       }
      }
      coords 0 0 0

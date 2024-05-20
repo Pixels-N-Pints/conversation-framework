@@ -7,6 +7,7 @@ class PAP_DialogueOptionJson : JsonApiStruct
 	// Default option
 	int next = -1;
 	ref array<ref PAP_DialogueOptionJson> options;
+	string entityName;
 	// Member vars
 	// ...
 	

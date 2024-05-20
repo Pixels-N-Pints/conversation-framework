@@ -15,42 +15,48 @@ class PAP_NPCComponent : ScriptComponent
 	
 	//! Rotation on the x axis
 	private const vector m_vRotation[3] = { "1 0 0", "0 -1 0", "0 0 -1" };
-
+	
+	//------------------------------------------------------------------------------------------------
+	override void EOnFrame(IEntity owner, float timeSlice)
+	{
+		super.EOnFrame(owner, timeSlice);
+		Rotate(owner, timeSlice);
+	}
 	
 	//------------------------------------------------------------------------------------------------
 	//! Rotates the NPC such that they come face to face with the player
-	protected void Rotate(float timeSlice)
+	//! \param owner The npc
+	//! \param timeSlice The slice of time
+	protected void Rotate(IEntity owner, float timeSlice)
 	{
 		m_fElapsedTime += timeSlice;
 		
 		// Terminate rotation of NPC once complete
 		if (m_fElapsedTime > m_fReactionDelay)
 		{
-			// ClearEventMask(owner, EntityEvent.POSTFIXEDFRAME);
+			StopRotation();
 			return;
 		} 
 		
 		vector newAngles = vector.Lerp(m_vNpcAngles, m_vTargetAngles, m_fElapsedTime / m_fReactionDelay);
 		GetOwner().SetAngles(newAngles);
-		GetGame().GetCallqueue().CallLater(Rotate, 100, false, timeSlice);
 	}
 	
 	//------------------------------------------------------------------------------------------------
 	//! Starts the rotation of the NPC
-	//! \param playerAngles Angles of the player talking to this NPC
-	void StartRotation(vector playerAngles)
+	//! \param playerPosition Angles of the player talking to this NPC
+	void StartRotation(vector playerPosition)
 	{
-		m_fElapsedTime = 0;
-		m_vNpcAngles = GetOwner().GetAngles();
-		m_vTargetAngles = playerAngles.Multiply3(m_vRotation);
-		Rotate(0.1);
-		// SetEventMask(GetOwner(), EntityEvent.POSTFIXEDFRAME);
+		SCR_AIUtilityComponent utilityComponent = SCR_AIUtilityComponent.Cast(GetOwner().FindComponent(SCR_AIUtilityComponent));
+		if (!utilityComponent) return;
+		utilityComponent.m_LookAction.LookAt(playerPosition, 1, m_fReactionDelay);
 	}
 	
 	//------------------------------------------------------------------------------------------------
 	//! Stops rotation
 	void StopRotation()
 	{
-		// ClearEventMask(GetOwner(), EntityEvent.POSTFIXEDFRAME);
+		// ClearEventMask(GetOwner(), EntityEvent.FRAME);
+		// GetOwner().SetFlags(EntityFlags.ACTIVE, true);
 	}
 }
