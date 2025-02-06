@@ -275,10 +275,6 @@ class PAP_ConversationLayoutUI : MenuBase
 			inputManager.RemoveActionListener("MenuBackWB", EActionTrigger.DOWN, Close);
 #endif
 		}
-		
-		// End npc rotation
-		PAP_NPCComponent npcComponent = PAP_NPCComponent.Cast(m_Npc.FindComponent(PAP_NPCComponent));
-		npcComponent.StopRotation();
 	}
 
 	//------------------------------------------------------------------------------------------------

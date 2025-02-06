@@ -11,6 +11,8 @@ class PAP_ConversationLayoutAttributes : ScriptedUserAction
 	
 	protected ref PAP_DialogueLoader m_dialogueLoader;
 	
+	protected PAP_NPCComponent m_NpcComponent;
+	
 	//------------------------------------------------------------------------------------------------
 	//! Set the conversation. 
 	//! Useful if the npc needs to be able to have distinct conversations with the player. 
@@ -27,9 +29,18 @@ class PAP_ConversationLayoutUserAction : PAP_ConversationLayoutAttributes
 	override void Init(IEntity pOwnerEntity, GenericComponent pManagerComponent)
 	{
 		super.Init(pOwnerEntity, pManagerComponent);
-		
-		m_dialogueLoader = new PAP_DialogueLoader();
-		m_dialogueLoader.LoadConversation(LoadConfig());
+		CharacterIdentityComponent characterIdentityComponent = CharacterIdentityComponent.Cast(pOwnerEntity.FindComponent(CharacterIdentityComponent));
+		m_NpcComponent = PAP_NPCComponent.Cast(pOwnerEntity.FindComponent(PAP_NPCComponent));
+		if (m_NpcComponent)
+		{
+			m_dialogueLoader = new PAP_DialogueLoader();
+			m_dialogueLoader.LoadConversation(LoadConfig());
+		}		
+	}
+	
+	override bool HasLocalEffectOnlyScript()
+	{
+		return true;
 	}
 	
 	//------------------------------------------------------------------------------------------------
@@ -41,7 +52,7 @@ class PAP_ConversationLayoutUserAction : PAP_ConversationLayoutAttributes
 			Print("Dialogue with " + pOwnerEntity.GetName() + " is already in use", LogLevel.WARNING);
 			return;
 		}
-		
+				
 		// Create the display and hydrate the widgets
 		m_wDisplay = PAP_ConversationLayoutUI.Cast(GetGame().GetMenuManager().OpenDialog(ChimeraMenuPreset.PAP_ConversationLayout, DialogPriority.INFORMATIVE, 0, true));
 		CharacterIdentityComponent playerCharacterIdentity = CharacterIdentityComponent.Cast(pUserEntity.FindComponent(CharacterIdentityComponent));
@@ -65,14 +76,15 @@ class PAP_ConversationLayoutUserAction : PAP_ConversationLayoutAttributes
 	//------------------------------------------------------------------------------------------------
 	override bool CanBeShownScript(IEntity user)
 	{
+		if (!m_NpcComponent) return false;
 		if (m_wDisplay) return false;
 		SCR_ChimeraCharacter owner = SCR_ChimeraCharacter.Cast(GetOwner());
 		SCR_ChimeraCharacter player = SCR_ChimeraCharacter.Cast(user);
 		
-		// If unfriendly then false
-		if (!owner.GetFaction().IsFactionFriendly(player.GetFaction())) return false;
 		// If player then false
-		if (owner.GetCharacterController().IsPlayerControlled()) return false;
+		if (owner.GetCharacterController().IsPlayerControlled()) 
+			return false;
+		
 		return true;
 	}
 	
