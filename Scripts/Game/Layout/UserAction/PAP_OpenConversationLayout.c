@@ -41,22 +41,11 @@ class PAP_ConversationLayoutUserAction : PAP_ConversationLayoutAttributes
 			Print("Dialogue with " + pOwnerEntity.GetName() + " is already in use", LogLevel.WARNING);
 			return;
 		}
-
-		// Get the npc to look at you
-		PAP_NPCComponent npcComponent = PAP_NPCComponent.Cast(pOwnerEntity.FindComponent(PAP_NPCComponent));
-		if (npcComponent)
-		{
-			npcComponent.StartRotation(pUserEntity.GetOrigin());
-		}
-		else
-		{
-			Print("NPC " + pOwnerEntity.GetName() + " doesn't have a PAP_NPCComponent", LogLevel.ERROR);
-			return;
-		}
 		
 		// Create the display and hydrate the widgets
 		m_wDisplay = PAP_ConversationLayoutUI.Cast(GetGame().GetMenuManager().OpenDialog(ChimeraMenuPreset.PAP_ConversationLayout, DialogPriority.INFORMATIVE, 0, true));
 		CharacterIdentityComponent playerCharacterIdentity = CharacterIdentityComponent.Cast(pUserEntity.FindComponent(CharacterIdentityComponent));
+		
 		m_wDisplay.ResumeDialogue(m_dialogueLoader, playerCharacterIdentity.GetIdentity(), pOwnerEntity);
 	}
 

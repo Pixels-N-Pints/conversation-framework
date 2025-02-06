@@ -165,6 +165,7 @@ SCR_ChimeraCharacter MikkelThePikkel : "{3726077BE60962FF}Prefabs/Characters/Fac
   ChimeraAIControlComponent "{520EA1D2DB109F34}" {
    OverrideAIBehaviorData "{B62F3C5AA48FFEEF}AI/BehaviorTrees/Chimera/Soldier/Wait.bt"
    EnableAI 1
+   PhysicsLayer 1
   }
   ClimbingDataComponent "{5304A49E934A0758}" {
    CanClimbOver 0
@@ -177,8 +178,6 @@ SCR_ChimeraCharacter MikkelThePikkel : "{3726077BE60962FF}Prefabs/Characters/Fac
   }
   MeshObject "{520EA1D2F659C81F}" {
    Object "{9F3AF591CD6DFE1A}Assets/Characters/Basebody/Basebody_Male_01.xob"
-  }
-  PAP_NPCComponent "{6168A1E80E34A806}" {
   }
   SCR_BaseHUDComponent "{520EA1D2DB118134}" {
    InfoDisplays {
@@ -200,6 +199,7 @@ SCR_ChimeraCharacter MikkelThePikkel : "{3726077BE60962FF}Prefabs/Characters/Fac
    "Fall damage max speed" 11.2
    EnableDamage 0
    m_bPermitUnconsciousness 0
+   m_bAllowBloodyClothes 0
   }
   SCR_CharacterPerceivableComponent "{566CCE2397E28600}" {
    "Additional aim points" {
@@ -805,8 +805,6 @@ SCR_ChimeraCharacter MikkelThePikkel : "{3726077BE60962FF}Prefabs/Characters/Fac
    StartNode "MasterControl"
    "Collision bone" "collision"
    "Server LOD" 1
-   "LOD camera distances" +{
-   }
    DefaultShapeLayer 524288
    FreshwaterLayer 4194304
    LayerPreset "Character"

@@ -2,7 +2,6 @@ GenericEntity AreaKill : "{C72F956E4AC6A6E7}Prefabs/ScenarioFramework/Components
  components {
   SCR_ScenarioFrameworkArea "{59E8CDC50969206E}" {
    m_iRandomPercent 100
-   m_bShowDebugShapesDuringRuntime 1
    m_fAreaRadius 50
    m_bDynamicDespawn 1
    m_iDynamicDespawnRange 50
