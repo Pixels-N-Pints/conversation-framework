@@ -1,5 +1,5 @@
 //! Allows embedding of expressions in template strings
-enum PAP_TemplateString
+enum PNP_TemplateString
 {
 	//! Name of the identity of the entity
 	IDENTITY_NAME,
@@ -15,7 +15,7 @@ enum PAP_TemplateString
 	NPC_IDENTITY_FULLNAME,
 }
 
-class PAP_StringInterpolation
+class PNP_StringInterpolation
 {
 	static const string INTERPOLATE_CHAR_START = "{";
 	static const string INTERPOLATE_CHAR_END = "}";
@@ -93,30 +93,30 @@ class PAP_StringInterpolation
 	protected static string SubsituteExpression(string expression, Identity identity, Identity npcIdentity)
 	{
 		string result;
-		switch (typename.StringToEnum(PAP_TemplateString, expression))
+		switch (typename.StringToEnum(PNP_TemplateString, expression))
 		{
-			case PAP_TemplateString.IDENTITY_NAME:
+			case PNP_TemplateString.IDENTITY_NAME:
 				result = identity.GetName();
 				break;
-			case PAP_TemplateString.IDENTITY_ALIAS:
+			case PNP_TemplateString.IDENTITY_ALIAS:
 				result = identity.GetAlias();
 				break;
-			case PAP_TemplateString.IDENTITY_SURNAME:
+			case PNP_TemplateString.IDENTITY_SURNAME:
 				result = identity.GetSurname();
 				break;
-			case PAP_TemplateString.IDENTITY_FULLNAME:
+			case PNP_TemplateString.IDENTITY_FULLNAME:
 				result = identity.GetFullName();
 				break;
-			case PAP_TemplateString.NPC_IDENTITY_NAME:
+			case PNP_TemplateString.NPC_IDENTITY_NAME:
 				result = npcIdentity.GetName();
 				break;
-			case PAP_TemplateString.NPC_IDENTITY_ALIAS:
+			case PNP_TemplateString.NPC_IDENTITY_ALIAS:
 				result = npcIdentity.GetAlias();
 				break;
-			case PAP_TemplateString.NPC_IDENTITY_SURNAME:
+			case PNP_TemplateString.NPC_IDENTITY_SURNAME:
 				result = npcIdentity.GetSurname();
 				break;
-			case PAP_TemplateString.NPC_IDENTITY_FULLNAME:
+			case PNP_TemplateString.NPC_IDENTITY_FULLNAME:
 				result = npcIdentity.GetFullName();
 				break;
 		}

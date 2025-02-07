@@ -1,43 +1,20 @@
 //! Container for the open conversation dialogue user action
-class PAP_ConversationLayoutAttributes : ScriptedUserAction
+class PNP_ConversationLayoutAttributes : ScriptedUserAction
 {
 	[Attribute(defvalue: "{A27941092D1EA761}UI/Layouts/conversation.layout")] // setup the created layout here
 	protected ResourceName m_sLayout;
 	
-	[Attribute(params: "conf", defvalue: "{267D14ACD9EFFEE5}Configs/Dialogue/sample_dialogue.conf", desc: "Conversation file for this AI agent")]
+	[Attribute(params: "conf", desc: "Conversation file for this AI agent")]
 	protected ResourceName m_sConversation;
 	
-	protected PAP_ConversationLayoutUI m_wDisplay;
+	protected PNP_ConversationLayoutUI m_wDisplay;
 	
-	protected ref PAP_DialogueLoader m_dialogueLoader;
-	
-	protected PAP_NPCComponent m_NpcComponent;
-	
-	//------------------------------------------------------------------------------------------------
-	//! Set the conversation. 
-	//! Useful if the npc needs to be able to have distinct conversations with the player. 
-	//! E.g. the player fulfills a certain condition and the npc is ready to have a different conversation.
-	void SetConversation(ResourceName conversation)
-	{
-		m_sConversation = conversation;
-	}
+	protected ref PNP_DialogueLoader m_dialogueLoader;
 }
 //! Handles the user action's behaviour
-class PAP_ConversationLayoutUserAction : PAP_ConversationLayoutAttributes
+class PNP_ConversationLayoutUserAction : PNP_ConversationLayoutAttributes
 {
 	//------------------------------------------------------------------------------------------------
-	override void Init(IEntity pOwnerEntity, GenericComponent pManagerComponent)
-	{
-		super.Init(pOwnerEntity, pManagerComponent);
-		CharacterIdentityComponent characterIdentityComponent = CharacterIdentityComponent.Cast(pOwnerEntity.FindComponent(CharacterIdentityComponent));
-		m_NpcComponent = PAP_NPCComponent.Cast(pOwnerEntity.FindComponent(PAP_NPCComponent));
-		if (m_NpcComponent)
-		{
-			m_dialogueLoader = new PAP_DialogueLoader();
-			m_dialogueLoader.LoadConversation(LoadConfig());
-		}		
-	}
-	
 	override bool HasLocalEffectOnlyScript()
 	{
 		return true;
@@ -52,9 +29,18 @@ class PAP_ConversationLayoutUserAction : PAP_ConversationLayoutAttributes
 			Print("Dialogue with " + pOwnerEntity.GetName() + " is already in use", LogLevel.WARNING);
 			return;
 		}
+		
+		if (!m_dialogueLoader)
+		{	
+			m_dialogueLoader = new PNP_DialogueLoader();
+			ref PNP_NPCComponent npcComponent = PNP_NPCComponent.Cast(pOwnerEntity.FindComponent(PNP_NPCComponent));
+			m_dialogueLoader.LoadConversation(LoadConfig(), npcComponent);
+
+			npcComponent.SetDialogueLoader(m_dialogueLoader);
+		}
 				
 		// Create the display and hydrate the widgets
-		m_wDisplay = PAP_ConversationLayoutUI.Cast(GetGame().GetMenuManager().OpenDialog(ChimeraMenuPreset.PAP_ConversationLayout, DialogPriority.INFORMATIVE, 0, true));
+		m_wDisplay = PNP_ConversationLayoutUI.Cast(GetGame().GetMenuManager().OpenDialog(ChimeraMenuPreset.PNP_ConversationLayout, DialogPriority.INFORMATIVE, 0, true));
 		CharacterIdentityComponent playerCharacterIdentity = CharacterIdentityComponent.Cast(pUserEntity.FindComponent(CharacterIdentityComponent));
 		
 		m_wDisplay.ResumeDialogue(m_dialogueLoader, playerCharacterIdentity.GetIdentity(), pOwnerEntity);
@@ -76,22 +62,18 @@ class PAP_ConversationLayoutUserAction : PAP_ConversationLayoutAttributes
 	//------------------------------------------------------------------------------------------------
 	override bool CanBeShownScript(IEntity user)
 	{
-		if (!m_NpcComponent) return false;
-		if (m_wDisplay) return false;
-		SCR_ChimeraCharacter owner = SCR_ChimeraCharacter.Cast(GetOwner());
-		SCR_ChimeraCharacter player = SCR_ChimeraCharacter.Cast(user);
-		
-		// If player then false
-		if (owner.GetCharacterController().IsPlayerControlled()) 
+		if (!PNP_NPCComponent.Cast(GetOwner().FindComponent(PNP_NPCComponent)))
 			return false;
 		
+		if (m_wDisplay) return false;
+	
 		return true;
 	}
 	
 	//------------------------------------------------------------------------------------------------
 	//! Loads conversation from conf file
 	//! \return a container of the conversation
-	protected PAP_ConversationConf LoadConfig()
+	protected PNP_ConversationConf LoadConfig()
 	{
 		if (m_sConversation.IsEmpty())
 		{
@@ -103,6 +85,6 @@ class PAP_ConversationLayoutUserAction : PAP_ConversationLayoutAttributes
 		if (!resource.IsValid())
 			return null;
 
-		return PAP_ConversationConf.Cast(BaseContainerTools.CreateInstanceFromContainer(resource.GetResource().ToBaseContainer()));
+		return PNP_ConversationConf.Cast(BaseContainerTools.CreateInstanceFromContainer(resource.GetResource().ToBaseContainer()));
 	}
 }

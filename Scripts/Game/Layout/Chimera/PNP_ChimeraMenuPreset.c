@@ -1,4 +1,4 @@
 modded enum ChimeraMenuPreset
 {
-	PAP_ConversationLayout,
+	PNP_ConversationLayout,
 }

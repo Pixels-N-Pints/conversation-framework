@@ -738,7 +738,7 @@ SCR_ChimeraCharacter MikkelThePikkel : "{3726077BE60962FF}Prefabs/Characters/Fac
      m_bShowSupplyCostOnAction 0
      m_bDoesGadgetAnimationLoop 0
     }
-    PAP_ConversationLayoutUserAction "{61507E8B0143040F}" {
+    PNP_ConversationLayoutUserAction "{61507E8B0143040F}" {
      VisibilityRange 2
      m_sConversation "{0858865E306C23D1}Configs/Dialogue/basic_kill_request.conf"
     }

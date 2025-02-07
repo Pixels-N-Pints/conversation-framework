@@ -1,17 +1,21 @@
 //! Container for a conversation
-class PAP_DialogueLoader
+class PNP_DialogueLoader
 {
 	// Member vars
 	//! Checkpoint of the conversation
 	protected int m_iCheckpoint;
 	//! Dialogue entries defined in a configuration file and rebuilt as a map object for ease of scripting
-	protected ref map<int, ref PAP_DialogueOptionJson> m_mDialogueById;
+	protected ref map<int, ref PNP_DialogueOptionJson> m_mDialogueById;
+	
+	private PNP_NPCComponent m_nPcComponent;
 	
 	//------------------------------------------------------------------------------------------------
 	//! Checkpoint setter
-	void SetCheckpoint(int checkpoint)
+	void SetCheckpoint(int checkpoint, bool shouldReplicate)
 	{
 		m_iCheckpoint = checkpoint;	
+		if (shouldReplicate) 
+			m_nPcComponent.SetCheckpoint(checkpoint);
 	}
 	
 	//------------------------------------------------------------------------------------------------
@@ -24,7 +28,7 @@ class PAP_DialogueLoader
 	//------------------------------------------------------------------------------------------------
 	//! Gets the current option based on the value of the checkpoint
 	//! \return a dialogue entry
-	ref PAP_DialogueOptionJson GetCurrentOption()
+	ref PNP_DialogueOptionJson GetCurrentOption()
 	{
 		if (!m_mDialogueById || m_mDialogueById.IsEmpty())
 		{
@@ -32,39 +36,47 @@ class PAP_DialogueLoader
 			return null;
 		}
 		
-		ref PAP_DialogueOptionJson option = m_mDialogueById.Get(m_iCheckpoint);
+		ref PNP_DialogueOptionJson option = m_mDialogueById.Get(m_iCheckpoint);
 		return option;
 	}
 	
 	//------------------------------------------------------------------------------------------------
 	//! Checks the configuration object is valid then calls to build the conversation map
 	//! \param conversationConf Configuration object containing the conversation
-	void LoadConversation(PAP_ConversationConf conversationConf)
+	void LoadConversation(PNP_ConversationConf conversationConf, PNP_NPCComponent npcComponent)
 	{
 		if (!conversationConf)
 		{
 			Print("No dialogue configuration file supplied!", LogLevel.ERROR);
 			return;
 		}
+		if (!npcComponent)
+		{	
+			Print("No npc component to replicate checkpoint", LogLevel.ERROR);
+			return;
+		}
+		
+		m_nPcComponent = npcComponent;
+		
 		BuildConversationFromConf(conversationConf);
 	}
 	
 	//------------------------------------------------------------------------------------------------
 	//! Builds the conversation map
 	//! \param conversationConf Configuration object containing the conversation
-	protected void BuildConversationFromConf(notnull PAP_ConversationConf conversationConf)
+	protected void BuildConversationFromConf(notnull PNP_ConversationConf conversationConf)
 	{
-		m_mDialogueById = new map<int, ref PAP_DialogueOptionJson>();
-		array<ref PAP_DialogueEntryConf> options = conversationConf.GetOptions();
+		m_mDialogueById = new map<int, ref PNP_DialogueOptionJson>();
+		array<ref PNP_DialogueEntryConf> options = conversationConf.GetOptions();
 		if (!options || options.IsEmpty())
 		{
 			Print("No entries found in the dialogue file!", LogLevel.ERROR);
 			return;
 		}
 		
-		foreach (PAP_DialogueEntryConf entry: options)
+		foreach (PNP_DialogueEntryConf entry: options)
 		{
-			ref PAP_DialogueOptionJson jEntry = new PAP_DialogueOptionJson();
+			ref PNP_DialogueOptionJson jEntry = new PNP_DialogueOptionJson();
 			jEntry.id = entry.GetId();
 			jEntry.message = entry.GetMessage();
 			jEntry.next = entry.GetNextId();
@@ -73,9 +85,9 @@ class PAP_DialogueLoader
 			if (entry.GetOptions() && !entry.GetOptions().IsEmpty())
 			{
 				jEntry.options = {};
-				foreach (PAP_DialogueEntryOptionConf entryOption : entry.GetOptions())
+				foreach (PNP_DialogueEntryOptionConf entryOption : entry.GetOptions())
 				{
-					PAP_DialogueOptionJson jEntryOption = new PAP_DialogueOptionJson();
+					PNP_DialogueOptionJson jEntryOption = new PNP_DialogueOptionJson();
 					jEntryOption.message = entryOption.GetMessage();
 					jEntryOption.next = entryOption.GetNextId();
 					jEntryOption.entityName = entryOption.GetEntityName();
@@ -90,7 +102,7 @@ class PAP_DialogueLoader
 
 	//------------------------------------------------------------------------------------------------
 	//! Destructor
-	void ~PAP_DialogueLoader()
+	void ~PNP_DialogueLoader()
 	{
 		delete m_mDialogueById;
 	}

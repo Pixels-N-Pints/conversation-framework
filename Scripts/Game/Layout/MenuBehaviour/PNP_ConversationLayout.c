@@ -1,9 +1,9 @@
 //! Dialogue behaviour for the conversation layout
-class PAP_ConversationLayoutUI : MenuBase
+class PNP_ConversationLayoutUI : MenuBase
 {
 	// Member vars
-	protected ref PAP_DialogueLoader m_cDialogueLoader;
-	protected ref array<ref PAP_DialogueOptionJson> m_mOptions;
+	protected ref PNP_DialogueLoader m_cDialogueLoader;
+	protected ref array<ref PNP_DialogueOptionJson> m_mOptions;
 	protected bool m_bItallic = false;
 	protected Identity m_PlayerIdentity;
 	protected IEntity m_Npc;
@@ -28,7 +28,7 @@ class PAP_ConversationLayoutUI : MenuBase
 	//! \param dialogueLoader Container for conversation
 	//! \param playerIdentity Identity of the player
 	//! \param npc The npc
-	void ResumeDialogue(inout PAP_DialogueLoader dialogueLoader, Identity playerIdentity, IEntity npc)
+	void ResumeDialogue(inout PNP_DialogueLoader dialogueLoader, Identity playerIdentity, IEntity npc)
 	{
 		if (!dialogueLoader)
 		{	
@@ -52,7 +52,7 @@ class PAP_ConversationLayoutUI : MenuBase
 		CharacterIdentityComponent npcIdentityComponent = CharacterIdentityComponent.Cast(m_Npc.FindComponent(CharacterIdentityComponent));
 		m_NpcIdentity = npcIdentityComponent.GetIdentity();
 		
-		ref PAP_DialogueOptionJson option = m_cDialogueLoader.GetCurrentOption();
+		ref PNP_DialogueOptionJson option = m_cDialogueLoader.GetCurrentOption();
 		HandleOption(option);
 	}
 	
@@ -60,7 +60,7 @@ class PAP_ConversationLayoutUI : MenuBase
 	//! Updates the message and handles options based on the supplied dialogue entry
 	//! If the player is not required to answer the next entry will be displayed after the current entry's delay has expired
 	//! \param entry The current entry to be displayed
-	protected void HandleOption(PAP_DialogueOptionJson entry)
+	protected void HandleOption(PNP_DialogueOptionJson entry)
 	{
 		if (!entry)
 		{
@@ -87,13 +87,13 @@ class PAP_ConversationLayoutUI : MenuBase
 		if (!messageWidget) return;
 		
 		messageWidget.SetItalic(m_bItallic);
-		messageWidget.SetText(PAP_StringInterpolation.InterpolateString(message, m_PlayerIdentity, m_NpcIdentity));
+		messageWidget.SetText(PNP_StringInterpolation.InterpolateString(message, m_PlayerIdentity, m_NpcIdentity));
 	}
 	
 	//------------------------------------------------------------------------------------------------
 	//! Updates the option buttons. Disables and hides buttons not required.
 	//! \param options The options the player can pick from
-	protected void UpdateOptions(array<ref PAP_DialogueOptionJson> options)
+	protected void UpdateOptions(array<ref PNP_DialogueOptionJson> options)
 	{
 		m_mOptions = options;
 		for(int i = 0; i < MAX_OPTIONS; i++)
@@ -116,7 +116,7 @@ class PAP_ConversationLayoutUI : MenuBase
 					continue;
 				}
 				// Update option text
-				option.SetText(PAP_StringInterpolation.InterpolateString(m_mOptions[i].message, m_PlayerIdentity, m_NpcIdentity));
+				option.SetText(PNP_StringInterpolation.InterpolateString(m_mOptions[i].message, m_PlayerIdentity, m_NpcIdentity));
 				// Reenable button
 				button.SetVisible(true);
 				button.SetEnabled(true);
@@ -165,7 +165,7 @@ class PAP_ConversationLayoutUI : MenuBase
 	{
 		if (next != -1 && next != 0)
 		{
-			m_cDialogueLoader.SetCheckpoint(next);
+			m_cDialogueLoader.SetCheckpoint(next, true);
 			GetGame().GetCallqueue().CallLater(HandleOption, delay * 1000, false, m_cDialogueLoader.GetCurrentOption());
 		}
 		else if (next == 0)
@@ -224,10 +224,10 @@ class PAP_ConversationLayoutUI : MenuBase
 	
 	//------------------------------------------------------------------------------------------------
 	//! Updates the checkpoint and displays the next entry
-	protected void HandleEntryOption(PAP_DialogueOptionJson entryOption)
+	protected void HandleEntryOption(PNP_DialogueOptionJson entryOption)
 	{
 		// m_bItallic = true;
-		m_cDialogueLoader.SetCheckpoint(entryOption.next);
+		m_cDialogueLoader.SetCheckpoint(entryOption.next, true);
 		GetGame().GetCallqueue().CallLater(HandleOption, 500, false, m_cDialogueLoader.GetCurrentOption());
 		// m_bItallic = false;
 	}
@@ -279,7 +279,7 @@ class PAP_ConversationLayoutUI : MenuBase
 
 	//------------------------------------------------------------------------------------------------
 	//! Destructor
-	void ~PAP_ConversationLayoutUI()
+	void ~PNP_ConversationLayoutUI()
 	{
 		delete m_EntityFactory;
 	}

@@ -1,0 +1,17 @@
+SCR_ChimeraCharacter : "{76EC8248377D0989}Prefabs/Characters/Factions/CIV/Businessman/Character_CIV_Businessman_Base.et" {
+ ID "520EC961A090B1EE"
+ components {
+  PNP_NPCComponent "{648D506110050B15}" {
+  }
+  ActionsManagerComponent "{520EA1D2F659CE02}" {
+   additionalActions {
+    PNP_ConversationLayoutUserAction "{648D506110050B03}" {
+     ParentContextList {
+      "default"
+     }
+     m_sConversation "{0858865E306C23D1}Configs/Dialogue/basic_kill_request.conf"
+    }
+   }
+  }
+ }
+}
