@@ -9,7 +9,7 @@ class PNP_ConversationLayoutAttributes : ScriptedUserAction
 	
 	protected PNP_ConversationLayoutUI m_wDisplay;
 	
-	protected ref PNP_DialogueLoader m_dialogueLoader;
+	protected ref PNP_DialogueLoader m_DialogueLoader;
 }
 //! Handles the user action's behaviour
 class PNP_ConversationLayoutUserAction : PNP_ConversationLayoutAttributes
@@ -30,35 +30,41 @@ class PNP_ConversationLayoutUserAction : PNP_ConversationLayoutAttributes
 			return;
 		}
 		
-		if (!m_dialogueLoader)
+		if (!m_DialogueLoader)
 		{	
-			m_dialogueLoader = new PNP_DialogueLoader();
-			ref PNP_NPCComponent npcComponent = PNP_NPCComponent.Cast(pOwnerEntity.FindComponent(PNP_NPCComponent));
-			m_dialogueLoader.LoadConversation(LoadConfig(), npcComponent);
-
-			npcComponent.SetDialogueLoader(m_dialogueLoader);
+			m_DialogueLoader = new PNP_DialogueLoader();
+			// Assign npc component to dialogue loader
+			PNP_NPCComponent npcComponent = PNP_NPCComponent.Cast(pOwnerEntity.FindComponent(PNP_NPCComponent));
+			m_DialogueLoader.LoadConversation(LoadConfig(), npcComponent);
 		}
 				
 		// Create the display and hydrate the widgets
 		m_wDisplay = PNP_ConversationLayoutUI.Cast(GetGame().GetMenuManager().OpenDialog(ChimeraMenuPreset.PNP_ConversationLayout, DialogPriority.INFORMATIVE, 0, true));
 		CharacterIdentityComponent playerCharacterIdentity = CharacterIdentityComponent.Cast(pUserEntity.FindComponent(CharacterIdentityComponent));
 		
-		m_wDisplay.ResumeDialogue(m_dialogueLoader, playerCharacterIdentity.GetIdentity(), pOwnerEntity);
+		m_wDisplay.ResumeDialogue(m_DialogueLoader, playerCharacterIdentity.GetIdentity(), pOwnerEntity);
 	}
 
 	//------------------------------------------------------------------------------------------------
 	override bool GetActionNameScript(out string outName)
-	{
+	{	
+		PNP_NPCComponent npcComponent = PNP_NPCComponent.Cast(GetOwner().FindComponent(PNP_NPCComponent));
+		if (!npcComponent) return false;
+		
 		CharacterIdentityComponent characterIdentityComponent = CharacterIdentityComponent.Cast(GetOwner().FindComponent(CharacterIdentityComponent));
-		if (!characterIdentityComponent) return false;
 		Identity identity = characterIdentityComponent.GetIdentity();
 		if (!identity) return false;
 		
-		if (!m_wDisplay)
+		if (m_wDisplay) return false;
+		
+		if (npcComponent.InUse())
+			outName = identity.GetFullName() + " is busy";
+		else
 			outName = "Talk to " + identity.GetFullName();
-
+		
 		return true;
 	}
+	
 	//------------------------------------------------------------------------------------------------
 	override bool CanBeShownScript(IEntity user)
 	{
@@ -66,6 +72,20 @@ class PNP_ConversationLayoutUserAction : PNP_ConversationLayoutAttributes
 			return false;
 		
 		if (m_wDisplay) return false;
+	
+		return true;
+	}
+	
+	//------------------------------------------------------------------------------------------------
+	override bool CanBePerformedScript(IEntity user)
+	{
+		PNP_NPCComponent npcComponent = PNP_NPCComponent.Cast(GetOwner().FindComponent(PNP_NPCComponent));
+		if (!npcComponent)
+			return false;
+		
+		if (m_wDisplay) return false;
+		
+		if (npcComponent.InUse()) return false;
 	
 		return true;
 	}
@@ -86,5 +106,11 @@ class PNP_ConversationLayoutUserAction : PNP_ConversationLayoutAttributes
 			return null;
 
 		return PNP_ConversationConf.Cast(BaseContainerTools.CreateInstanceFromContainer(resource.GetResource().ToBaseContainer()));
+	}
+	
+	//------------------------------------------------------------------------------------------------
+	void ~PNP_ConversationLayoutUserAction()
+	{
+		delete m_DialogueLoader;
 	}
 }

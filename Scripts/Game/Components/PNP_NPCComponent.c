@@ -5,24 +5,32 @@ class PNP_NPCComponentClass : ScriptComponentClass
 
 class PNP_NPCComponent : ScriptComponent
 {
-	[RplProp(onRplName : "OnCheckpointUpdate")]
-	private int m_iCheckpoint;
+	// Checkpoint in the coversation
+	[RplProp()]
+	private int m_iCheckpoint = 1;
 	
-	private PNP_DialogueLoader m_dialogueLoader;
-	
-	void SetDialogueLoader(PNP_DialogueLoader dialogueLoader)
-	{
-		m_dialogueLoader = dialogueLoader;
-	}
+	// In use by another player
+	[RplProp()]
+	private bool m_bInUse;
 	
 	void SetCheckpoint(int checkpoint)
 	{
 		m_iCheckpoint = checkpoint;
+	}
+	
+	int GetCheckpoint()
+	{
+		return m_iCheckpoint;
+	}
+	
+	void SetInUse(bool inUse)
+	{
+		m_bInUse = inUse;
 		Replication.BumpMe();
 	}
 	
-	void OnCheckpointUpdate()
+	bool InUse()
 	{
-		m_dialogueLoader.SetCheckpoint(m_iCheckpoint, false);
+		return m_bInUse == true;
 	}
 }

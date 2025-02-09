@@ -2,29 +2,11 @@
 class PNP_DialogueLoader
 {
 	// Member vars
-	//! Checkpoint of the conversation
-	protected int m_iCheckpoint;
 	//! Dialogue entries defined in a configuration file and rebuilt as a map object for ease of scripting
 	protected ref map<int, ref PNP_DialogueOptionJson> m_mDialogueById;
 	
-	private PNP_NPCComponent m_nPcComponent;
+	private PNP_NPCComponent m_NpcComponent;
 	
-	//------------------------------------------------------------------------------------------------
-	//! Checkpoint setter
-	void SetCheckpoint(int checkpoint, bool shouldReplicate)
-	{
-		m_iCheckpoint = checkpoint;	
-		if (shouldReplicate) 
-			m_nPcComponent.SetCheckpoint(checkpoint);
-	}
-	
-	//------------------------------------------------------------------------------------------------
-	//! Checkpoint getter
-	int GetCheckpoint()
-	{
-		return m_iCheckpoint;
-	}
-
 	//------------------------------------------------------------------------------------------------
 	//! Gets the current option based on the value of the checkpoint
 	//! \return a dialogue entry
@@ -36,7 +18,7 @@ class PNP_DialogueLoader
 			return null;
 		}
 		
-		ref PNP_DialogueOptionJson option = m_mDialogueById.Get(m_iCheckpoint);
+		ref PNP_DialogueOptionJson option = m_mDialogueById.Get(m_NpcComponent.GetCheckpoint());
 		return option;
 	}
 	
@@ -56,7 +38,7 @@ class PNP_DialogueLoader
 			return;
 		}
 		
-		m_nPcComponent = npcComponent;
+		m_NpcComponent = npcComponent;
 		
 		BuildConversationFromConf(conversationConf);
 	}
@@ -96,8 +78,6 @@ class PNP_DialogueLoader
 			}
 			m_mDialogueById.Insert(jEntry.id, jEntry);
 		}
-		// Reset checkpoint
-		m_iCheckpoint = m_mDialogueById.GetKey(0);
 	}
 
 	//------------------------------------------------------------------------------------------------
